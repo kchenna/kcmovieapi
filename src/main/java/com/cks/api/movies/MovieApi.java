@@ -16,7 +16,7 @@ public class MovieApi {
 	TamilYogiMovieService service;
 	
 	@RequestMapping("/movies")
-    public List<HashMap<String,String>> getProfile(@RequestParam String pageNo) {
-		return service.getMovies(pageNo);
+    public List<HashMap<String,String>> getProfile(@RequestParam String page) {
+		return service.getMovies(page);
 	}
 }
