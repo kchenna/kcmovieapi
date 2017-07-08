@@ -46,6 +46,7 @@ public class TamilYogiMovieService implements MovieService {
 						title = title.substring(0, title.indexOf("[") - 1);
 					}
 					map.put("title", title);
+					map.put("baseUrl",element.absUrl("href"));
 					movieUrls.add(map);
 				}
 			}
@@ -85,6 +86,16 @@ public class TamilYogiMovieService implements MovieService {
 		return map;
 
 	}
+	
+	public String getMovie(String url){
+		try{
+			IFrameRunnable runnable = new IFrameRunnable(null);
+			return runnable.getMovieUrl(runnable.getIframe(url));
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return null;
+	}
 
 	public static class IFrameRunnable implements Runnable {
 
@@ -106,7 +117,7 @@ public class TamilYogiMovieService implements MovieService {
 			}
 		}
 
-		private String getIframe(String url) throws IOException {
+		public String getIframe(String url) throws IOException {
 			Document doc;
 			String u = null;
 			doc = Jsoup.connect(url).get();
@@ -119,7 +130,7 @@ public class TamilYogiMovieService implements MovieService {
 			return u;
 		}
 
-		private String getMovieUrl(String iframeUrl) {
+		public String getMovieUrl(String iframeUrl) {
 			Document doc;
 			String url = null;
 

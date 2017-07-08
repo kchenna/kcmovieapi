@@ -17,6 +17,13 @@ public class MovieApi {
 	
 	@RequestMapping("/movies")
     public HashMap getMovies(@RequestParam String page) {
+		System.out.println("REQUEST:");
 		return service.getMovies(page);
 	}
+	
+	@RequestMapping("/movie")
+    public String getMovie(@RequestParam String url) {
+		return service.getMovie(url);
+	}
+	
 }
