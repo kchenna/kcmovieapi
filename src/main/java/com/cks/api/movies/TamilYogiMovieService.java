@@ -170,19 +170,4 @@ public class TamilYogiMovieService implements MovieService {
 
 	}
 
-	
-	public static void main(String[] args) throws IOException {
-	
-		TamilYogiMovieService app = new TamilYogiMovieService();
-		List<HashMap<String, String>> movies = app.getMovies("1");
-		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-		for (HashMap<String, String> movie : movies) {
-			if (movie.get("url") != null) {
-				list.add(movie);
-			}
-		}
-		System.out.println("Movie " + list.size());
-		System.out.println(list);
-		
-	}
 }
