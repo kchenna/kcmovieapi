@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TamilYogiMovieService implements MovieService {
 
-	public List<HashMap<String, String>> getMovies(String pageNo) {
+	public HashMap getMovies(String pageNo) {
 
 		Document doc;
 		List<HashMap<String, String>> movieUrls = new ArrayList<HashMap<String, String>>();
@@ -77,7 +77,12 @@ public class TamilYogiMovieService implements MovieService {
 			}
 		}
 		
-		return list;
+		HashMap map = new HashMap();
+		map.put("page", Integer.parseInt(pageNo)+1);
+		map.put("tracks", list);
+		map.put("hasMoreItems", list.size() >0 ? true : false);
+		
+		return map;
 
 	}
 

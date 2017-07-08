@@ -1,7 +1,6 @@
 package com.cks.api.movies;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +14,9 @@ public class MovieApi {
 	@Autowired
 	TamilYogiMovieService service;
 	
+	
 	@RequestMapping("/movies")
-    public List<HashMap<String,String>> getProfile(@RequestParam String page) {
+    public HashMap getMovies(@RequestParam String page) {
 		return service.getMovies(page);
 	}
 }
