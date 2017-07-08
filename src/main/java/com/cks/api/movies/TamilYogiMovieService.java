@@ -29,8 +29,12 @@ public class TamilYogiMovieService implements MovieService {
 		List<HashMap<String, String>> movieUrls = new ArrayList<HashMap<String, String>>();
 
 		try {
-			String url = "http://tamilyogi.cc/category/tamilyogi-bluray-movies/page/" + pageNo + "/";
-			doc = Jsoup.connect(url).get();
+			String url = "http://tamilyogi.fm/category/tamilyogi-bluray-movies/page/" + pageNo + "/";
+			doc = Jsoup.connect(url)
+					.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0")
+					.referrer("http://tamilyogi.fm/category/tamilyogi-bluray-movies/")
+					.get();
+			
 			Elements elements = doc.select("ul li div a[href]");
 
 			for (Element element : elements) {
