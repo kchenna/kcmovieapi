@@ -112,6 +112,7 @@ public class TamilGunMovieService implements MovieService {
 		}
 
 		private String decodeJS(String encodedJS) {
+			System.out.println("encodedJS "+encodedJS);
 			ScriptEngineManager manager = new ScriptEngineManager();
 			ScriptEngine engine = manager.getEngineByName("nashorn");
 			try {
