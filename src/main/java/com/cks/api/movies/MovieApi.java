@@ -1,10 +1,11 @@
 package com.cks.api.movies;
 
-import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -12,18 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class MovieApi {
 	
 	@Autowired
-	TamilYogiMovieService service;
+	TamilGunMovieService service;
 	
-	
-	@RequestMapping("/movies")
-    public HashMap getMovies(@RequestParam String page) {
-		System.out.println("REQUEST:");
-		return service.getMovies(page);
+	@RequestMapping(value="/movie", method=RequestMethod.POST)
+	public String getMovieUrl(@RequestBody RequestInfo info) {
+		return service.getMovieUrl(info.getPlayUrl(),info.getReferredUrl());
 	}
 	
-	@RequestMapping("/movie")
-    public String getMovie(@RequestParam String url) {
-		return service.getMovie(url);
+	@RequestMapping("/tracks")
+	public List<Track> getTrackInfo(String pageNo) {
+		return service.getTrackInfo(pageNo);
 	}
 	
 }

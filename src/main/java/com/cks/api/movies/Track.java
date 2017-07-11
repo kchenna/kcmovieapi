@@ -1,5 +1,8 @@
 package com.cks.api.movies;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class Track {
 
 	private String url;
@@ -9,13 +12,19 @@ public class Track {
 	private String dislikes;
 	private String baseUrl;
 	private String poster;
-	
+	private List<HashMap<String, String>> movieLinkMetadata;
 	
 	public String getPoster() {
 		return poster;
 	}
 	public void setPoster(String poster) {
 		this.poster = poster;
+	}
+	public List<HashMap<String, String>> getMovieLinkMetadata() {
+		return movieLinkMetadata;
+	}
+	public void setMovieLinkMetadata(List<HashMap<String, String>> movieLinkMetadata) {
+		this.movieLinkMetadata = movieLinkMetadata;
 	}
 	public String getUrl() {
 		return url;
@@ -56,7 +65,6 @@ public class Track {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return super.toString();
 	}
 	

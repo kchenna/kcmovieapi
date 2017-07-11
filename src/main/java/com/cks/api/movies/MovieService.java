@@ -1,11 +1,11 @@
 package com.cks.api.movies;
 
-import java.util.HashMap;
+import java.util.List;
 
 public interface MovieService {
 	
-	public HashMap getMovies(String pageNo);
+	public List<Track> getTrackInfo(String pageNo); 
 	
-	public String getMovie(String url);
+	public String getMovieUrl(String playUrl, String referredUrl);
 
 }
