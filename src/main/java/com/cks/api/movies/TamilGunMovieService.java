@@ -37,9 +37,10 @@ public class TamilGunMovieService implements MovieService {
 	}
 
 	@Override
-	public List<Track> getTrackInfo(String pageNo) {
+	public TrackMetadata getTrackInfo(int page) {
+		TrackMetadata metadata = new TrackMetadata();
 		try {
-			String url = "http://tamilgun.ooo/categories/hd-movies/page/" + pageNo + "/";
+			String url = "http://tamilgun.ooo/categories/hd-movies/page/" + page + "/";
 			Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
 			Elements elements = doc.select("section article");
 			Track track = null;
@@ -73,7 +74,11 @@ public class TamilGunMovieService implements MovieService {
 					e.printStackTrace();
 				}
 			}
-
+			
+			metadata.setTracks(trackList);
+			metadata.setHasMoreItems(true);
+			metadata.setNextUrl("http://tamilgun.ooo/categories/hd-movies/page/"+(page+1)+"/");
+			
 			executor.shutdown();
 			while (!executor.isTerminated()) {
 			}
@@ -81,7 +86,7 @@ public class TamilGunMovieService implements MovieService {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return null;
+		return metadata;
 	}
 
 	public static class VideoContainerRunnable implements Runnable {

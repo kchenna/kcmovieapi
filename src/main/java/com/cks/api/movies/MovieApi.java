@@ -1,8 +1,7 @@
 package com.cks.api.movies;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,9 +19,9 @@ public class MovieApi {
 		return service.getMovieUrl(info.getPlayUrl(),info.getReferredUrl());
 	}
 	
-	@RequestMapping("/tracks")
-	public List<Track> getTrackInfo(String pageNo) {
-		return service.getTrackInfo(pageNo);
+	@RequestMapping(value="/tracks/{page}")
+	public TrackMetadata getTrackInfo(@PathVariable int page) {
+		return service.getTrackInfo(page);
 	}
 	
 }
