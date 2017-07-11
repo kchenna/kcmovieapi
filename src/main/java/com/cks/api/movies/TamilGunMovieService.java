@@ -80,6 +80,7 @@ public class TamilGunMovieService implements MovieService {
 			metadata.setTracks(trackList);
 			metadata.setHasMoreItems(true);
 			metadata.setNextUrl("http://tamilgun.ooo/categories/hd-movies/page/"+(page+1)+"/");
+			metadata.setCount(trackList.size());
 			
 			executor.shutdown();
 			while (!executor.isTerminated()) {

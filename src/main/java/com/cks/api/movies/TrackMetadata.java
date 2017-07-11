@@ -7,7 +7,14 @@ public class TrackMetadata {
 	private List<Track> tracks;
 	private String nextUrl;
 	private boolean hasMoreItems;
+	private int count;
 	
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
 	public List<Track> getTracks() {
 		return tracks;
 	}
