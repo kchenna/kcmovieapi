@@ -1,11 +1,14 @@
 package com.cks.api.movies;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.io.IOException;
-import org.jsoup.Connection.Response;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +16,26 @@ import org.jsoup.select.Elements;
 
 public class TamilGunMovieService implements MovieService{
 
+	private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
 	
+
+	private String decodeJS(String encodedJS) {
+		ScriptEngineManager manager = new ScriptEngineManager();
+		ScriptEngine engine = manager.getEngineByName("nashorn");
+		try {
+			String evalFn = encodedJS.substring("eval(".length(), encodedJS.lastIndexOf(")"));
+			String evaluate = "var decode =" + evalFn;
+			engine.eval(evaluate);
+			String decoded = (String) engine.eval("decode");
+			return decoded;
+		} catch (ScriptException e) {
+			System.err.println("e.getMessage():" + e.getMessage());
+		}
+		return null;
+	}
+
+
+
 	@Override
 	public HashMap getMovies(String pageNo) {
 		Document doc;
@@ -50,6 +72,36 @@ public class TamilGunMovieService implements MovieService{
 			Track t = trackList.get(0);
 			
 			System.out.println(t.getUrl());
+			
+			doc = Jsoup.connect(t.getUrl())
+					.get();
+			
+			Elements videoContainers = doc.select("div.video-container script");
+			//System.out.println(videoContainers.html());
+			
+			String decodedString = decodeJS(videoContainers.html());
+
+			
+			JauntExample example = new JauntExample();
+			
+			//example.getLinkMap(decodedString);
+			
+			List<HashMap<String,String>> list = example.getLinkMap(decodedString);
+			HashMap<String,String> first = list.get(0);
+			
+			System.out.println(decodedString);
+			
+			Connection homeConn = Jsoup.connect(first.get("file")).userAgent(USER_AGENT);
+			Document doc1 = homeConn.get();
+			Elements container = doc1.select("div[class=video-container]");
+
+			Connection conn = Jsoup.connect(first.get("file")+ "&stream=1").referrer(t.getUrl())
+					.userAgent(USER_AGENT);
+			conn.ignoreContentType(true).execute();
+			
+			
+			System.out.println(conn.response().url().toString());
+			//example.getMovieUrl(first.get("file"));
 			
 			
 		}catch(Exception ex){
