@@ -43,6 +43,8 @@ public class TamilGunMovieService implements MovieService {
 		TrackMetadata metadata = new TrackMetadata();
 		try {
 			String url = "http://tamilgun.ooo/categories/hd-movies/page/" + page + "/";
+			String nextUrl = "https://chennakk.herokuapp.com/tamil/tracks/"+(page+1)+"/";
+			
 			Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
 			Elements elements = doc.select("section article");
 			Track track = null;
@@ -79,7 +81,7 @@ public class TamilGunMovieService implements MovieService {
 			
 			metadata.setTracks(trackList);
 			metadata.setHasMoreItems(true);
-			metadata.setNextUrl("http://tamilgun.ooo/categories/hd-movies/page/"+(page+1)+"/");
+			metadata.setNextUrl(nextUrl);
 			metadata.setCount(trackList.size());
 			
 			executor.shutdown();
