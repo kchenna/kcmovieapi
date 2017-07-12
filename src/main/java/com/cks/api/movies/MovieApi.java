@@ -14,7 +14,7 @@ public class MovieApi {
 	@Autowired
 	TamilGunMovieService service;
 	
-	@RequestMapping(value="/movie", method=RequestMethod.POST)
+	@RequestMapping(value="/movie", method=RequestMethod.POST,headers = "Accept=application/json")
 	public String getMovieUrl(@RequestBody RequestInfo info) {
 		return service.getMovieUrl(info.getPlayUrl(),info.getReferredUrl());
 	}

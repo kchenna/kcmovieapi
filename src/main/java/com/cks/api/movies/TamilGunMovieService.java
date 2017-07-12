@@ -1,6 +1,5 @@
 package com.cks.api.movies;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +31,7 @@ public class TamilGunMovieService implements MovieService {
 			Connection conn = Jsoup.connect(playUrl + "&stream=1").referrer(referredUrl).userAgent(USER_AGENT);
 			conn.ignoreContentType(true).execute();
 			return conn.response().url().toString();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -108,7 +107,9 @@ public class TamilGunMovieService implements MovieService {
 				Document doc = Jsoup.connect(track.getBaseUrl()).get();
 				Elements videoContainers = doc.select("div.video-container script");
 				String decodedString = decodeJS(videoContainers.html());
-				track.setMovieLinkMetadata(getMovieLinkMetadata(decodedString));
+				if ( decodedString !=null){
+					track.setMovieLinkMetadata(getMovieLinkMetadata(decodedString));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -116,16 +117,18 @@ public class TamilGunMovieService implements MovieService {
 
 		private String decodeJS(String encodedJS) {
 			System.out.println("encodedJS "+encodedJS);
-			ScriptEngineManager manager = new ScriptEngineManager();
-			ScriptEngine engine = manager.getEngineByName("nashorn");
-			try {
-				String evalFn = encodedJS.substring("eval(".length(), encodedJS.lastIndexOf(")"));
-				String evaluate = "var decode =" + evalFn;
-				engine.eval(evaluate);
-				String decoded = (String) engine.eval("decode");
-				return decoded;
-			} catch (ScriptException e) {
-				System.err.println("e.getMessage():" + e.getMessage());
+			if (encodedJS !=null && encodedJS.trim().length() >0){
+				ScriptEngineManager manager = new ScriptEngineManager();
+				ScriptEngine engine = manager.getEngineByName("nashorn");
+				try {
+					String evalFn = encodedJS.substring("eval(".length(), encodedJS.lastIndexOf(")"));
+					String evaluate = "var decode =" + evalFn;
+					engine.eval(evaluate);
+					String decoded = (String) engine.eval("decode");
+					return decoded;
+				} catch (ScriptException e) {
+					System.err.println("e.getMessage():" + e.getMessage());
+				}
 			}
 			return null;
 		}
