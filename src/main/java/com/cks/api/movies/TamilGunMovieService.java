@@ -2,6 +2,7 @@ package com.cks.api.movies;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,6 +16,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -24,6 +26,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class TamilGunMovieService implements MovieService {
 
 	private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
+
+	@Value("${tamilgun}")
+	private String tamilgunUrl;
+	
+	@Value("${api}")
+	private String apiUrl;
 
 	@Override
 	public String getMovieUrl(String playUrl, String referredUrl) {
@@ -41,8 +49,8 @@ public class TamilGunMovieService implements MovieService {
 	public TrackMetadata getTrackInfo(int page) {
 		TrackMetadata metadata = new TrackMetadata();
 		try {
-			String url = "http://tamilgun.ooo/categories/hd-movies/page/" + page + "/";
-			String nextUrl = "https://chennakk.herokuapp.com/tamil/tracks/"+(page+1)+"/";
+			String url = tamilgunUrl+ page + "/";
+			String nextUrl = apiUrl+(page+1)+"/";
 			
 			Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
 			Elements elements = doc.select("section article");
@@ -78,14 +86,21 @@ public class TamilGunMovieService implements MovieService {
 				}
 			}
 			
+			executor.shutdown();
+			while (!executor.isTerminated()) {
+			}
+			
+			for (Iterator<Track> iterator = trackList.iterator(); iterator.hasNext();) {
+				Track track2 = iterator.next();
+				if ( track2.getMovieLinkMetadata() == null){
+					iterator.remove();
+				}
+			}
+
 			metadata.setTracks(trackList);
 			metadata.setHasMoreItems(true);
 			metadata.setNextUrl(nextUrl);
 			metadata.setCount(trackList.size());
-			
-			executor.shutdown();
-			while (!executor.isTerminated()) {
-			}
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -109,6 +124,8 @@ public class TamilGunMovieService implements MovieService {
 				String decodedString = decodeJS(videoContainers.html());
 				if ( decodedString !=null){
 					track.setMovieLinkMetadata(getMovieLinkMetadata(decodedString));
+				}else{
+					System.err.println("Url is missing for "+track.getBaseUrl());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -116,7 +133,6 @@ public class TamilGunMovieService implements MovieService {
 		}
 
 		private String decodeJS(String encodedJS) {
-			System.out.println("encodedJS "+encodedJS);
 			if (encodedJS !=null && encodedJS.trim().length() >0){
 				ScriptEngineManager manager = new ScriptEngineManager();
 				ScriptEngine engine = manager.getEngineByName("nashorn");
